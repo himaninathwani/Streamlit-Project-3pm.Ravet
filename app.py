@@ -18,6 +18,23 @@ company = st.text_input("Company Name")
 
 # If company name is input then
 if company:
+    # Get the symbol for given company
     search = client.symbol_search(company)
-    options = st.selectbox("Company Symbol", options=search.keys())
+    option = st.selectbox("Company Symbol", options=search.keys())
+    selected = search[option]
+
+    # Display the name, currency, region for each symbol
+    st.success(f"Name: {selected[0]}")
+    st.success(f"Region: {selected[1]}")
+    st.success(f"Currency: {selected[2]}")
+
+    # Create a submit button
+    submit = st.button("Submit", type="primary")
+
+    # After pressing submit button
+    if submit:
+        df = client.get_daily_prices(option)
+        fig = client.plot_candlestick(df)
+        st.plotly_chart(fig)
+        
     
